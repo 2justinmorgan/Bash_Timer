@@ -1,0 +1,33 @@
+#!/bin/bash
+
+argc=$[$#+1]
+num_reg_ex='^[0-9]+$'
+
+# checks number of args
+if [ $argc -ne 2 ]
+then
+   >&2 echo "Usage: timer <minutes>"
+   exit 1
+fi
+
+# checks if passed argv[1] is positive int
+if ! [[ $1 =~ $num_reg_ex ]] || [ $1 -le 0 ]
+then
+   >&2 echo "<minutes> must be a positive integer"
+   exit 1
+fi
+
+num_of_minutes=$1
+second=00
+
+while [ $num_of_minutes -ge 0 ]
+do
+   while [ $second -ge 0 ]
+   do
+      printf "Time Remaining: %d:%02d\r" $num_of_minutes $second
+      sleep 1
+      second=$[$second-1]
+   done
+   num_of_minutes=$[$num_of_minutes-1]
+   second=59
+done
