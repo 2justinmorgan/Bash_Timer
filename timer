@@ -25,7 +25,7 @@ do
    while [ $second -ge 0 ]
    do
       printf "Time Remaining: %02d:%02d\r" $num_of_minutes $second
-      sleep .1
+      sleep 1
       second=$[$second-1]
    done
    num_of_minutes=$[$num_of_minutes-1]
