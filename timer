@@ -41,7 +41,7 @@ printf "$finish_time\r"
 
 difference=0
 
-while [ $difference -lt 100 ]
+while [ $difference -lt 6000 ]  # limits time passed to "(99:99 past)"
 do
 	sleep 1  # sleep eliminates excessive iterations ($difference is in seconds)
 	curr_timestamp=$(date +%s)
@@ -49,3 +49,6 @@ do
 	printf "$finish_time  (%02d:%02d past)\r" $((difference/60)) \
 		$((difference%60))
 done
+
+printf "$finish_time  (%02d:%02d past)\n" $((difference/60)) \
+	$((difference%60))
