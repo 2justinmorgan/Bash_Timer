@@ -10,10 +10,10 @@ then
    exit 1
 fi
 
-# checks if passed argv[1] is positive int
-if ! [[ $1 =~ $num_reg_ex ]] || [ $1 -le 0 ]
+# checks if passed argv[1] is an int ranging from 1-99
+if ! [[ $1 =~ $num_reg_ex ]] || [ $1 -le 0 ] || [ $1 -ge 100 ]
 then
-   >&2 echo "<minutes> must be a positive integer"
+   >&2 echo "<minutes> must be an integer ranging from 1-99"
    exit 1
 fi
 
@@ -24,10 +24,28 @@ while [ $num_of_minutes -ge 0 ]
 do
    while [ $second -ge 0 ]
    do
-      printf "Time Remaining: %d:%02d\r" $num_of_minutes $second
-      sleep 1
+      printf "Time Remaining: %02d:%02d\r" $num_of_minutes $second
+      sleep .1
       second=$[$second-1]
    done
    num_of_minutes=$[$num_of_minutes-1]
    second=59
+done
+
+# clear stdout at this line to have only blank spaces
+# printf "                         \r"
+
+finish_time="Finished at $(date +%r)"
+finish_timestamp=$(date +%s)
+printf "$finish_time\r"
+
+difference=0
+
+while [ $difference -lt 100 ]
+do
+	sleep 1  # sleep eliminates excessive iterations ($difference is in seconds)
+	curr_timestamp=$(date +%s)
+	difference=$((curr_timestamp-finish_timestamp))
+	printf "$finish_time  (%02d:%02d past)\r" $((difference/60)) \
+		$((difference%60))
 done
