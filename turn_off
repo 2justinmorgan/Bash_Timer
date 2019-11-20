@@ -1,0 +1,57 @@
+#!/bin/bash
+
+argc=$[$#+1]
+this_file_name="${0##*/}"
+procedures=("shutdown" "suspend")
+
+function usage {
+	>&2 echo "Usage: $this_file_name <procedure>"
+}
+
+function valid_procedures {
+	>&2 echo "$this_file_name: valid procedures are (${procedures[*]})"
+}
+
+function procedure_prompt () {
+	printf "Press ENTER to $1"
+	read
+}
+
+# checks number of args
+if [ $argc -ne 2 ]
+then
+	usage
+	exit 1
+fi
+
+# check if argv[1] is a valid procedure
+valid=0
+for procedure in "${procedures[@]}"
+do
+	if [ $procedure == $1 ] ; 
+	then
+		valid=1
+	fi
+done
+
+if [ $valid -eq 0 ] ; 
+then
+	usage
+	valid_procedures
+	exit 1
+fi
+
+procedure_prompt $1
+
+# handle individual procedure
+case $1 in
+shutdown )
+	killall chrome
+	sleep 1
+	shutdown now
+	;;
+suspend )
+	systemctl suspend
+	;;
+esac
+
